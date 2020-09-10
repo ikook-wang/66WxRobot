@@ -883,7 +883,7 @@
             NSString *imageFormat = @"Content-Type: image/jpeg \r\n";
 
             //请求
-            NSURL *requestUrl = [NSURL URLWithString:@"http://localhost:8081/scanner"];
+            NSURL *requestUrl = [NSURL URLWithString:@"http://58.56.15.138:22001/scanner"];
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestUrl];
             request.HTTPMethod = @"POST";
             
@@ -947,7 +947,7 @@
         }
         
         //1、创建一个URL
-        NSURL *url = [NSURL URLWithString:@"http://localhost:8081/action"];
+        NSURL *url = [NSURL URLWithString:@"http://58.56.15.138:22001/action"];
     
         //2、创建请求(Request)对象 这里使用的是它的子类NSMutableURLRequest,因为子类才具有设置方法和设置请求体的属性
         NSMutableURLRequest *requst = [[NSMutableURLRequest alloc]initWithURL:url];
@@ -986,15 +986,18 @@
         NSInteger delayTime = model.enableDelay ? model.delayTime : 0;
         
         MessageService *msgService = [[objc_getClass("MMServiceCenter") defaultCenter] getService:objc_getClass("MessageService")];
-
-        NSString *url1 = @"https://baidu.com";
         
-        NSString *title = @"配件信息";
+        NSString *title = @"配件列表";
         
         NSString *description = @"点击查看详情";
+        
+        NSBundle *bundle = [NSBundle bundleWithIdentifier:@"MustangYM.WeChatExtension"];
+        NSString *imgPath= [bundle pathForImageResource:@"share_pic_zhangdan.png"];
+        
+        NSData *imgThData = [NSData dataWithContentsOfFile: imgPath];
                 
         if([dic[@"data"] hasPrefix:@"http"]){
-            [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dic[@"data"] description:description thumbnailData:nil];
+            [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dic[@"data"] description:description thumbnailData:imgThData];
         } else {
             [[YMMessageManager shareManager] sendTextMessage:dic[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
 

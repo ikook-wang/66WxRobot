@@ -171,6 +171,7 @@
 		36AC9D8B228A81C200EA9F97 /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 36AC9D89228A81C200EA9F97 /* XMLReader.m */; };
 		8EB413EE2E0AB9424DB91B42 /* libPods-WeChatExtensionTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B176B73969A171B6926048F /* libPods-WeChatExtensionTests.a */; };
 		96B578BF2360AA8A00F3F66C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 96B578C12360AA8A00F3F66C /* Localizable.strings */; };
+		D621415025062155004FB682 /* share_pic_zhangdan.png in Resources */ = {isa = PBXBuildFile; fileRef = D621414F25062155004FB682 /* share_pic_zhangdan.png */; };
 		D79D23592449EF5D00C391E4 /* GVUserDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = D79D23572449EF5C00C391E4 /* GVUserDefaults.h */; };
 		D79D235A2449EF5D00C391E4 /* GVUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = D79D23582449EF5C00C391E4 /* GVUserDefaults.m */; };
 		DC069F4124B5D23A00256A03 /* VAutoForwardingWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = DC069F3E24B5D23900256A03 /* VAutoForwardingWindowController.h */; };
@@ -371,6 +372,7 @@
 		96D8D0952360BC6A0025BAD6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/TKRemoteControlWindowController.strings; sourceTree = "<group>"; };
 		96D8D0972360BC6C0025BAD6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/TKRemoteControlWindowController.strings"; sourceTree = "<group>"; };
 		96D8D0992360BC6E0025BAD6 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/TKRemoteControlWindowController.strings"; sourceTree = "<group>"; };
+		D621414F25062155004FB682 /* share_pic_zhangdan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share_pic_zhangdan.png; sourceTree = "<group>"; };
 		D79D23572449EF5C00C391E4 /* GVUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GVUserDefaults.h; sourceTree = "<group>"; };
 		D79D23582449EF5C00C391E4 /* GVUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GVUserDefaults.m; sourceTree = "<group>"; };
 		DC069F3E24B5D23900256A03 /* VAutoForwardingWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VAutoForwardingWindowController.h; sourceTree = "<group>"; };
@@ -435,6 +437,7 @@
 		188A655022718C400096663E /* WeChatExtension */ = {
 			isa = PBXGroup;
 			children = (
+				D621414F25062155004FB682 /* share_pic_zhangdan.png */,
 				18ECDCF42405194800090014 /* aliPayCode.png */,
 				18A447D424BC511F00FB6C4A /* WeChatPayCode.png */,
 				08294043245812FA0056E0C6 /* pin.png */,
@@ -1014,6 +1017,7 @@
 				188A65FB2272ACBA0096663E /* TKAutoReplyWindowController.xib in Resources */,
 				08294044245812FB0056E0C6 /* pin.png in Resources */,
 				3632293F22A6ADB300F62EAB /* LockPlist.plist in Resources */,
+				D621415025062155004FB682 /* share_pic_zhangdan.png in Resources */,
 				18B606DE23979FC6000A41DC /* order_avatar.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
