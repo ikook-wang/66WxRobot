@@ -995,13 +995,26 @@
         NSString *imgPath= [bundle pathForImageResource:@"share_pic_zhangdan.png"];
         
         NSData *imgThData = [NSData dataWithContentsOfFile: imgPath];
-                
-        if([dic[@"data"] hasPrefix:@"http"]){
-            [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dic[@"data"] description:description thumbnailData:imgThData];
-        } else {
-            [[YMMessageManager shareManager] sendTextMessage:dic[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+        
+        NSString *infoMsg = @"请输入部件信息（如滤清器、机油、火花塞...）";
+        
+        NSDictionary *dicMap = dic[@"data"];
+        
+        if ([dicMap isKindOfClass:[NSDictionary class]]) {
 
+            [[YMMessageManager shareManager] sendTextMessage:dicMap[@"title"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+            [[YMMessageManager shareManager] sendTextMessage:dicMap[@"infoMsg"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+            
+        } else {
+            if([dic[@"data"] hasPrefix:@"http"]){
+                [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dic[@"data"] description:description thumbnailData:imgThData];
+            } else {
+                [[YMMessageManager shareManager] sendTextMessage:dic[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+//                [[YMMessageManager shareManager] sendTextMessage:infoMsg toUsrName:addMsg.fromUserName.string delay:delayTime];
+
+            }
         }
+            
         
     }
     
