@@ -921,9 +921,9 @@
             [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
                 NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
                     if(dict){
-                         NSString *resMsg;
+//                         NSString *resMsg;
 //                            if([dict[@"code"] integerValue] == 0){
-                            resMsg = [NSString stringWithFormat:@"%@", dict[@"data"]];
+//                            resMsg = [NSString stringWithFormat:@"%@", dict[@"data"]];
 //                            }else{
 //                                resMsg = [NSString stringWithFormat:@"%@", dict[@"msg"]];
 //                            }
@@ -931,7 +931,29 @@
         //                NSArray *replyArray = [model.replyContent componentsSeparatedByString:@"|"];
         //                int index = arc4random() % replyArray.count;
                         NSInteger delayTime = model.enableDelay ? model.delayTime : 0;
-                        [[YMMessageManager shareManager] sendTextMessage:resMsg toUsrName:addMsg.fromUserName.string delay:delayTime];
+//                        [[YMMessageManager shareManager] sendTextMessage:resMsg toUsrName:addMsg.fromUserName.string delay:delayTime];
+                        
+                        NSDictionary *dicMap = dict[@"data"];
+                        
+                        MessageService *msgService = [[objc_getClass("MMServiceCenter") defaultCenter] getService:objc_getClass("MessageService")];
+                        
+                        NSString *title = @"配件列表";
+                              
+                        NSString *description = @"点击查看详情";
+                      
+                        NSBundle *bundle = [NSBundle bundleWithIdentifier:@"MustangYM.WeChatExtension"];
+                        NSString *imgPath= [bundle pathForImageResource:@"share_pic_zhangdan.png"];
+                      
+                        NSData *imgThData = [NSData dataWithContentsOfFile: imgPath];
+                           
+                        if ([dicMap isKindOfClass:[NSDictionary class]]) {
+                            
+                           [[YMMessageManager shareManager] sendTextMessage:dicMap[@"title"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+                           [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dicMap[@"url"] description:description thumbnailData:imgThData];
+                        } else {
+                            
+                            [[YMMessageManager shareManager] sendTextMessage:dict[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+                        }
                     }
             }];
         }];
@@ -996,24 +1018,33 @@
         
         NSData *imgThData = [NSData dataWithContentsOfFile: imgPath];
         
-        NSString *infoMsg = @"请输入部件信息（如滤清器、机油、火花塞...）";
+//        NSString *infoMsg = @"请输入部件信息（如滤清器、机油、火花塞...）";
         
         NSDictionary *dicMap = dic[@"data"];
         
-        if ([dicMap isKindOfClass:[NSDictionary class]]) {
-
+         if ([dicMap isKindOfClass:[NSDictionary class]]) {
             [[YMMessageManager shareManager] sendTextMessage:dicMap[@"title"] toUsrName:addMsg.fromUserName.string delay:delayTime];
-            [[YMMessageManager shareManager] sendTextMessage:dicMap[@"infoMsg"] toUsrName:addMsg.fromUserName.string delay:delayTime];
-            
-        } else {
-            if([dic[@"data"] hasPrefix:@"http"]){
-                [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dic[@"data"] description:description thumbnailData:imgThData];
-            } else {
-                [[YMMessageManager shareManager] sendTextMessage:dic[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
-//                [[YMMessageManager shareManager] sendTextMessage:infoMsg toUsrName:addMsg.fromUserName.string delay:delayTime];
-
-            }
-        }
+            [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dicMap[@"url"] description:description thumbnailData:imgThData];
+         } else {
+             [[YMMessageManager shareManager] sendTextMessage:dic[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+         }
+        
+       
+        
+//        if ([dicMap isKindOfClass:[NSDictionary class]]) {
+//
+//            [[YMMessageManager shareManager] sendTextMessage:dicMap[@"title"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+//            [[YMMessageManager shareManager] sendTextMessage:dicMap[@"infoMsg"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+//
+//        } else {
+//            if([dic[@"data"] hasPrefix:@"http"]){
+//                [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dic[@"data"] description:description thumbnailData:imgThData];
+//            } else {
+//                [[YMMessageManager shareManager] sendTextMessage:dic[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+////                [[YMMessageManager shareManager] sendTextMessage:infoMsg toUsrName:addMsg.fromUserName.string delay:delayTime];
+//
+//            }
+//        }
             
         
     }

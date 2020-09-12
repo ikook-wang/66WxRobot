@@ -30,8 +30,8 @@
             filePath = "WeChatExtension/Sources/Hook/WeChat+hook.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "958"
-            endingLineNumber = "958"
+            startingLineNumber = "980"
+            endingLineNumber = "980"
             landmarkName = "-replyWithMsg:model:"
             landmarkType = "7">
          </BreakpointContent>
@@ -238,8 +238,24 @@
             filePath = "WeChatExtension/Sources/Hook/WeChat+hook.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "941"
-            endingLineNumber = "941"
+            startingLineNumber = "963"
+            endingLineNumber = "963"
+            landmarkName = "-replyWithMsg:model:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6EDC69D7-41D9-48B3-9EB1-6B86F4759DA8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WeChatExtension/Sources/Hook/WeChat+hook.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "949"
+            endingLineNumber = "949"
             landmarkName = "-replyWithMsg:model:"
             landmarkType = "7">
          </BreakpointContent>
