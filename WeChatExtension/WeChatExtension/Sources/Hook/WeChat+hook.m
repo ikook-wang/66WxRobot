@@ -883,7 +883,7 @@
             NSString *imageFormat = @"Content-Type: image/jpeg \r\n";
 
             //请求
-            NSURL *requestUrl = [NSURL URLWithString:@"http://58.56.15.138:22001/scanner"];
+            NSURL *requestUrl = [NSURL URLWithString:@"http://wechat.ikook.top/scanner"];
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestUrl];
             request.HTTPMethod = @"POST";
             
@@ -948,11 +948,19 @@
                            
                         if ([dicMap isKindOfClass:[NSDictionary class]]) {
                             
+                            if ([addMsg.fromUserName.string containsString:@"@chatroom"]) {
+                                
+                                NSRange startRange = [addMsg.pushContent rangeOfString:@"在群聊"];
+                                NSString *pushNickname = [addMsg.pushContent substringToIndex:startRange.location];
+                                NSString *nickname = [NSString stringWithFormat:@"@%@", pushNickname];
+                                [msgService SendTextMessage:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string msgText:nickname atUserList:addMsg.toUserName.string];
+                            }
+                            
                            [[YMMessageManager shareManager] sendTextMessage:dicMap[@"title"] toUsrName:addMsg.fromUserName.string delay:delayTime];
                            [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dicMap[@"url"] description:description thumbnailData:imgThData];
                         } else {
                             
-                            [[YMMessageManager shareManager] sendTextMessage:dict[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+//                            [[YMMessageManager shareManager] sendTextMessage:dict[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
                         }
                     }
             }];
@@ -968,118 +976,144 @@
             }
         }
         
-        //1、创建一个URL
-        NSURL *url = [NSURL URLWithString:@"http://58.56.15.138:22001/action"];
-    
-        //2、创建请求(Request)对象 这里使用的是它的子类NSMutableURLRequest,因为子类才具有设置方法和设置请求体的属性
-        NSMutableURLRequest *requst = [[NSMutableURLRequest alloc]initWithURL:url];
-        //2.1、设置请求方法
-        requst.HTTPMethod = @"POST";
-        //2.2、设置请求体,因为传入的为Data数据所有这里需要转换
-    
-        NSString *msg = [NSString stringWithFormat:@"content=%@&wxid=%@", msgContent, msgContact.m_nsUsrName];
-    
-        requst.HTTPBody = [msg dataUsingEncoding:NSUTF8StringEncoding];
-        //2.3、设置请求超时时间，如果超过这个时间，请求为失败
-        requst.timeoutInterval = 10;
-    
-        //3、发送请求
-        /*
-         第一个参数:请求对象
-         第二个参数:响应头
-         第三个参数:错误信息
-         返回值:NSData类型,响应体信息
-         */
-        NSError *error = nil;
-        NSURLResponse *response = nil;
-        //发送同步请求(sendSynchronousRequest)
-        NSData *data = [NSURLConnection sendSynchronousRequest:requst returningResponse:&response error:&error];
-        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-        NSLog(@"dsflkdsl =%@",dic[@"msg"]);
-        //如果没有错误就执行
-        if (!error) {
-    
-                //打印的服务端返回的信息以及错误信息
-        //        NSLog(@"WJS我想测试啊,%@", [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
-        //        NSLog(@"%@",error);
+        if ([addMsg.fromUserName.string containsString:@"@chatroom"] && [msgContent hasPrefix:@"小智"]) {
+            
+            NSRange range = [addMsg.content.string rangeOfString:@":\n"];
+            NSString *nicknameWxid = [addMsg.content.string substringToIndex:range.location];
+            
+            
+//            NSRange range = NSMakeRange(startRange.location + startRange.length, msgContent.length - 1);
+            NSString *result = [msgContent substringFromIndex: 2];
+            
+            NSRange startRange = [addMsg.pushContent rangeOfString:@":"];
+            
+            NSString *pushNickname = [addMsg.pushContent substringToIndex:startRange.location];
+            
+            
+            //1、创建一个URL
+            NSURL *url = [NSURL URLWithString:@"http://wechat.ikook.top/action"];
+        
+            //2、创建请求(Request)对象 这里使用的是它的子类NSMutableURLRequest,因为子类才具有设置方法和设置请求体的属性
+            NSMutableURLRequest *requst = [[NSMutableURLRequest alloc]initWithURL:url];
+            //2.1、设置请求方法
+            requst.HTTPMethod = @"POST";
+            //2.2、设置请求体,因为传入的为Data数据所有这里需要转换
+        
+            NSString *msg = [NSString stringWithFormat:@"content=%@&wxid=%@&nickname=%@", result, msgContact.m_nsUsrName, pushNickname];
+        
+            requst.HTTPBody = [msg dataUsingEncoding:NSUTF8StringEncoding];
+            //2.3、设置请求超时时间，如果超过这个时间，请求为失败
+            requst.timeoutInterval = 10;
+        
+            //3、发送请求
+            /*
+             第一个参数:请求对象
+             第二个参数:响应头
+             第三个参数:错误信息
+             返回值:NSData类型,响应体信息
+             */
+            NSError *error = nil;
+            NSURLResponse *response = nil;
+            //发送同步请求(sendSynchronousRequest)
+            NSData *data = [NSURLConnection sendSynchronousRequest:requst returningResponse:&response error:&error];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+            NSLog(@"dsflkdsl =%@",dic[@"msg"]);
+            //如果没有错误就执行
+            if (!error) {
+        
+                    //打印的服务端返回的信息以及错误信息
+            //        NSLog(@"WJS我想测试啊,%@", [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
+            //        NSLog(@"%@",error);
+            }
+            
+
+            NSInteger delayTime = model.enableDelay ? model.delayTime : 0;
+            
+            MessageService *msgService = [[objc_getClass("MMServiceCenter") defaultCenter] getService:objc_getClass("MessageService")];
+            
+            NSString *title = @"配件列表";
+            
+            NSString *description = @"点击查看详情";
+            
+            NSBundle *bundle = [NSBundle bundleWithIdentifier:@"MustangYM.WeChatExtension"];
+            NSString *imgPath= [bundle pathForImageResource:@"share_pic_zhangdan.png"];
+            
+            NSData *imgThData = [NSData dataWithContentsOfFile: imgPath];
+            
+    //        NSString *infoMsg = @"请输入部件信息（如滤清器、机油、火花塞...）";
+            
+            NSDictionary *dicMap = dic[@"data"];
+            
+             if ([dicMap isKindOfClass:[NSDictionary class]]) {
+                [msgService SendTextMessage:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string msgText:dicMap[@"nickname"] atUserList:nicknameWxid];
+                [msgService SendTextMessage:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string msgText:dicMap[@"title"] atUserList:nicknameWxid];
+//                [[YMMessageManager shareManager] sendTextMessage:dicMap[@"title"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+                [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dicMap[@"url"] description:description thumbnailData:imgThData];
+             } else {
+                 NSString *nickname = [NSString stringWithFormat:@"@%@", pushNickname];
+                 [msgService SendTextMessage:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string msgText:nickname atUserList:nicknameWxid];
+                 [[YMMessageManager shareManager] sendTextMessage:dic[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+             }
+            
+                
+        } else if(![addMsg.fromUserName.string containsString:@"@chatroom"]) {
+            //1、创建一个URL
+            NSURL *url = [NSURL URLWithString:@"http://wechat.ikook.top/action"];
+        
+            //2、创建请求(Request)对象 这里使用的是它的子类NSMutableURLRequest,因为子类才具有设置方法和设置请求体的属性
+            NSMutableURLRequest *requst = [[NSMutableURLRequest alloc]initWithURL:url];
+            //2.1、设置请求方法
+            requst.HTTPMethod = @"POST";
+            //2.2、设置请求体,因为传入的为Data数据所有这里需要转换
+        
+            NSString *msg = [NSString stringWithFormat:@"content=%@&wxid=%@", msgContent, msgContact.m_nsUsrName];
+        
+            requst.HTTPBody = [msg dataUsingEncoding:NSUTF8StringEncoding];
+            //2.3、设置请求超时时间，如果超过这个时间，请求为失败
+            requst.timeoutInterval = 10;
+        
+            //3、发送请求
+            /*
+             第一个参数:请求对象
+             第二个参数:响应头
+             第三个参数:错误信息
+             返回值:NSData类型,响应体信息
+             */
+            NSError *error = nil;
+            NSURLResponse *response = nil;
+            //发送同步请求(sendSynchronousRequest)
+            NSData *data = [NSURLConnection sendSynchronousRequest:requst returningResponse:&response error:&error];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+            NSLog(@"dsflkdsl =%@",dic[@"msg"]);
+           
+
+            NSInteger delayTime = model.enableDelay ? model.delayTime : 0;
+            
+            MessageService *msgService = [[objc_getClass("MMServiceCenter") defaultCenter] getService:objc_getClass("MessageService")];
+            
+            NSString *title = @"配件列表";
+            
+            NSString *description = @"点击查看详情";
+            
+            NSBundle *bundle = [NSBundle bundleWithIdentifier:@"MustangYM.WeChatExtension"];
+            NSString *imgPath= [bundle pathForImageResource:@"share_pic_zhangdan.png"];
+            
+            NSData *imgThData = [NSData dataWithContentsOfFile: imgPath];
+
+            
+            NSDictionary *dicMap = dic[@"data"];
+            
+             if ([dicMap isKindOfClass:[NSDictionary class]]) {
+                [[YMMessageManager shareManager] sendTextMessage:dicMap[@"title"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+                [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dicMap[@"url"] description:description thumbnailData:imgThData];
+             } else {
+                 [[YMMessageManager shareManager] sendTextMessage:dic[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
+             }
+            
         }
         
-
-        NSInteger delayTime = model.enableDelay ? model.delayTime : 0;
-        
-        MessageService *msgService = [[objc_getClass("MMServiceCenter") defaultCenter] getService:objc_getClass("MessageService")];
-        
-        NSString *title = @"配件列表";
-        
-        NSString *description = @"点击查看详情";
-        
-        NSBundle *bundle = [NSBundle bundleWithIdentifier:@"MustangYM.WeChatExtension"];
-        NSString *imgPath= [bundle pathForImageResource:@"share_pic_zhangdan.png"];
-        
-        NSData *imgThData = [NSData dataWithContentsOfFile: imgPath];
-        
-//        NSString *infoMsg = @"请输入部件信息（如滤清器、机油、火花塞...）";
-        
-        NSDictionary *dicMap = dic[@"data"];
-        
-         if ([dicMap isKindOfClass:[NSDictionary class]]) {
-            [[YMMessageManager shareManager] sendTextMessage:dicMap[@"title"] toUsrName:addMsg.fromUserName.string delay:delayTime];
-            [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dicMap[@"url"] description:description thumbnailData:imgThData];
-         } else {
-             [[YMMessageManager shareManager] sendTextMessage:dic[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
-         }
-        
-       
-        
-//        if ([dicMap isKindOfClass:[NSDictionary class]]) {
-//
-//            [[YMMessageManager shareManager] sendTextMessage:dicMap[@"title"] toUsrName:addMsg.fromUserName.string delay:delayTime];
-//            [[YMMessageManager shareManager] sendTextMessage:dicMap[@"infoMsg"] toUsrName:addMsg.fromUserName.string delay:delayTime];
-//
-//        } else {
-//            if([dic[@"data"] hasPrefix:@"http"]){
-//                [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dic[@"data"] description:description thumbnailData:imgThData];
-//            } else {
-//                [[YMMessageManager shareManager] sendTextMessage:dic[@"data"] toUsrName:addMsg.fromUserName.string delay:delayTime];
-////                [[YMMessageManager shareManager] sendTextMessage:infoMsg toUsrName:addMsg.fromUserName.string delay:delayTime];
-//
-//            }
-//        }
-            
-        
     }
-    
-//    NSString *msgContent = addMsg.content.string;
-//    if ([addMsg.fromUserName.string containsString:@"@chatroom"]) {
-//        NSRange range = [msgContent rangeOfString:@":\n"];
-//        if (range.length > 0) {
-//            msgContent = [msgContent substringFromIndex:range.location + range.length];
-//        }
-//    }
-//
-//    NSArray *replyArray = [model.replyContent componentsSeparatedByString:@"|"];
-//    int index = arc4random() % replyArray.count;
-//    NSString *randomReplyContent = replyArray[index];
-//    NSInteger delayTime = model.enableDelay ? model.delayTime : 0;
-//
-//    if (model.enableRegex) {
-//        NSString *regex = model.keyword;
-//        NSError *error;
-//        NSRegularExpression *regular = [NSRegularExpression regularExpressionWithPattern:regex options:NSRegularExpressionCaseInsensitive error:&error];
-//        if (error) return;
-//        NSInteger count = [regular numberOfMatchesInString:msgContent options:NSMatchingReportCompletion range:NSMakeRange(0, msgContent.length)];
-//        if (count > 0) {
-//            [[YMMessageManager shareManager] sendTextMessage:randomReplyContent toUsrName:addMsg.fromUserName.string delay:delayTime];
-//        }
-//    } else {
-//        NSArray * keyWordArray = [model.keyword componentsSeparatedByString:@"|"];
-//        [keyWordArray enumerateObjectsUsingBlock:^(NSString *keyword, NSUInteger idx, BOOL * _Nonnull stop) {
-//            if ([keyword isEqualToString:@"*"] || [msgContent isEqualToString:keyword]) {
-//                [[YMMessageManager shareManager] sendTextMessage:randomReplyContent toUsrName:addMsg.fromUserName.string delay:delayTime];
-//                *stop = YES;
-//            }
-//        }];
-//    }
+
 }
 
 /**

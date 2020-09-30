@@ -23,22 +23,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "CBDA0CFC-1910-4008-84AF-D35A0DF1F108"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "WeChatExtension/Sources/Hook/WeChat+hook.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "980"
-            endingLineNumber = "980"
-            landmarkName = "-replyWithMsg:model:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "4DEEAB92-9C68-4EFB-977A-EB494E8B3C41"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -68,7 +52,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "A28E0E6D-BCE0-4074-A0DF-E96BF455A3A4 - 2c7e9c27569e7776"
+                  uuid = "A28E0E6D-BCE0-4074-A0DF-E96BF455A3A4 - de748c1fab9b814c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -83,7 +67,7 @@
                   offsetFromSymbolStart = "101">
                </Location>
                <Location
-                  uuid = "A28E0E6D-BCE0-4074-A0DF-E96BF455A3A4 - 375d3a93cbb887ba"
+                  uuid = "A28E0E6D-BCE0-4074-A0DF-E96BF455A3A4 - c5572aab36bd7180"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -216,7 +200,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "1D2338D7-3DFB-43D6-8465-0FA2AB1E6359"
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "WeChatExtension/Sources/Hook/WeChat+hook.m"
@@ -232,14 +216,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "EA897A9B-36BF-40AD-9E7F-95E856760236"
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "WeChatExtension/Sources/Hook/WeChat+hook.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "963"
-            endingLineNumber = "963"
+            startingLineNumber = "971"
+            endingLineNumber = "971"
             landmarkName = "-replyWithMsg:model:"
             landmarkType = "7">
          </BreakpointContent>
@@ -256,6 +240,38 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "949"
             endingLineNumber = "949"
+            landmarkName = "-replyWithMsg:model:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "ADACC963-76EC-4406-A808-2C75F7DB2F93"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WeChatExtension/Sources/Hook/WeChat+hook.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "986"
+            endingLineNumber = "986"
+            landmarkName = "-replyWithMsg:model:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D005DDB6-3B45-4258-9E53-B8095B67460C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WeChatExtension/Sources/Hook/WeChat+hook.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1048"
+            endingLineNumber = "1048"
             landmarkName = "-replyWithMsg:model:"
             landmarkType = "7">
          </BreakpointContent>
