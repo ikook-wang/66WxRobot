@@ -878,9 +878,21 @@
         NSString *currentUserName = [objc_getClass("CUtility") GetCurrentUserName];
                             
         [mgr originalImageWithMessage:msgData completion:^(NSString *name, NSImage *image){
-            NSData *originalData = [image TIFFRepresentation];
             
-            NSString *imageFormat = @"Content-Type: image/jpeg \r\n";
+//            NSData *originalData = [image TIFFRepresentation];
+            
+            NSData *imageData = [image TIFFRepresentation];
+            NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+            
+            NSDictionary *imageProps = nil;
+
+            NSNumber *quality = [NSNumber numberWithFloat:.85];
+
+            imageProps = [NSDictionary dictionaryWithObject:quality forKey:NSImageCompressionFactor];
+
+            NSData * originalData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+            
+            NSString *imageFormat = @"Content-Type: image/jpg \r\n";
 
             //请求
             NSURL *requestUrl = [NSURL URLWithString:@"http://wechat.ikook.top/scanner"];
@@ -892,7 +904,7 @@
 
             /**请求参数**/
             [body appendData:[@"--SPSWL\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-            NSString *disposition = @"Content-Disposition: form-data; name=\"photo\";filename=\"001.jpeg\"\r\n";
+            NSString *disposition = @"Content-Disposition: form-data; name=\"photo\";filename=\"001.jpg\"\r\n";
             [body appendData:[disposition dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[imageFormat dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
@@ -1208,3 +1220,4 @@ NSString *swizzled_NSHomeDirectory(void) {
     }
 }
 @end
+
