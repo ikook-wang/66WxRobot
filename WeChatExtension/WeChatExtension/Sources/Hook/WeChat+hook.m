@@ -895,7 +895,7 @@
             NSString *imageFormat = @"Content-Type: image/jpg \r\n";
 
             //请求
-            NSURL *requestUrl = [NSURL URLWithString:@"http://192.168.0.134:22001/scanner"];
+            NSURL *requestUrl = [NSURL URLWithString:@"http://wechat.ikook.top/scanner"];
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestUrl];
             request.HTTPMethod = @"POST";
             
@@ -1008,7 +1008,7 @@
             
             
             //1、创建一个URL
-            NSURL *url = [NSURL URLWithString:@"http://192.168.0.134:22001/action"];
+            NSURL *url = [NSURL URLWithString:@"http://wechat.ikook.top/action"];
         
             //2、创建请求(Request)对象 这里使用的是它的子类NSMutableURLRequest,因为子类才具有设置方法和设置请求体的属性
             NSMutableURLRequest *requst = [[NSMutableURLRequest alloc]initWithURL:url];
@@ -1075,7 +1075,7 @@
                 
         }else if(![addMsg.fromUserName.string containsString:@"@chatroom"] && (msgContent.length == 17 && [contentValidate evaluateWithObject:msgContent])) {
             //1、创建一个URL
-            NSURL *url = [NSURL URLWithString:@"http://192.168.0.134:22001/action"];
+            NSURL *url = [NSURL URLWithString:@"http://wechat.ikook.top/action"];
 
             //2、创建请求(Request)对象 这里使用的是它的子类NSMutableURLRequest,因为子类才具有设置方法和设置请求体的属性
             NSMutableURLRequest *requst = [[NSMutableURLRequest alloc]initWithURL:url];
