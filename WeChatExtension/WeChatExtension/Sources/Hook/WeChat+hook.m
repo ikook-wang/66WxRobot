@@ -855,6 +855,7 @@
 - (void)replyWithMsg:(AddMsg *)addMsg model:(YMAutoReplyModel *)model {
     
     NSString *userName = addMsg.fromUserName.string;
+    NSString *selfUserName = addMsg.toUserName.string;
        
     MMSessionMgr *sessionMgr = [[objc_getClass("MMServiceCenter") defaultCenter] getService:objc_getClass("MMSessionMgr")];
        
@@ -864,6 +865,14 @@
     } else {
         msgContact = [sessionMgr getContact:userName];
     }
+    
+    WCContactData *selfContactInfo = nil;
+    if (LargerOrEqualVersion(@"2.3.26")) {
+        selfContactInfo = [sessionMgr getSessionContact:selfUserName];
+    } else {
+        selfContactInfo = [sessionMgr getContact:selfUserName];
+    }
+    
     
     if(addMsg.imgStatus == 2) {
          
@@ -890,7 +899,7 @@
 
             imageProps = [NSDictionary dictionaryWithObject:quality forKey:NSImageCompressionFactor];
 
-            NSData * originalData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+            NSData *originalData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
             
             NSString *imageFormat = @"Content-Type: image/jpg \r\n";
 
@@ -911,13 +920,30 @@
             [body appendData:originalData];
             [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             
-            /**普通参数**/
+            /**普通参数 微信ID**/
             [body appendData:[@"--SPSWL\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             NSString *dispositions = @"Content-Disposition: form-data; name=\"wxid\"\r\n";
             [body appendData:[dispositions dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[msgContact.m_nsUsrName dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[selfContactInfo.m_nsUsrName dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            
+            /**普通参数 微信号**/
+            [body appendData:[@"--SPSWL\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            NSString *dispositions1 = @"Content-Disposition: form-data; name=\"wxCode\"\r\n";
+            [body appendData:[dispositions1 dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[selfContactInfo.m_nsAliasName dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];\
+            
+            /**普通参数 微信昵称**/
+            [body appendData:[@"--SPSWL\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            NSString *dispositions2 = @"Content-Disposition: form-data; name=\"wxNickname\"\r\n";
+            [body appendData:[dispositions2 dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[selfContactInfo.m_nsNickName dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            
             /**参数结束**/
             [body appendData:[@"--SPSWL--\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             request.HTTPBody = body;
@@ -933,17 +959,8 @@
             [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
                 NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
                     if(dict){
-//                         NSString *resMsg;
-//                            if([dict[@"code"] integerValue] == 0){
-//                            resMsg = [NSString stringWithFormat:@"%@", dict[@"data"]];
-//                            }else{
-//                                resMsg = [NSString stringWithFormat:@"%@", dict[@"msg"]];
-//                            }
-                        
-        //                NSArray *replyArray = [model.replyContent componentsSeparatedByString:@"|"];
-        //                int index = arc4random() % replyArray.count;
+
                         NSInteger delayTime = model.enableDelay ? model.delayTime : 0;
-//                        [[YMMessageManager shareManager] sendTextMessage:resMsg toUsrName:addMsg.fromUserName.string delay:delayTime];
                         
                         NSDictionary *dicMap = dict[@"data"];
                         
@@ -992,6 +1009,9 @@
 //        if ([addMsg.fromUserName.string containsString:@"@chatroom"] && [msgContent hasPrefix:@"小智"]) {
         NSString *regex = @"[0-9|a-zA-Z]+";
         NSPredicate *contentValidate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+        
+        msgContent = [msgContent stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+
         if ([addMsg.fromUserName.string containsString:@"@chatroom"] && (msgContent.length == 17 && [contentValidate evaluateWithObject:msgContent])) {
 
         
@@ -1016,7 +1036,8 @@
             requst.HTTPMethod = @"POST";
             //2.2、设置请求体,因为传入的为Data数据所有这里需要转换
         
-            NSString *msg = [NSString stringWithFormat:@"content=%@&wxid=%@&nickname=%@", msgContent, msgContact.m_nsUsrName, pushNickname];
+//            NSString *msg = [NSString stringWithFormat:@"content=%@&wxid=%@&nickname=%@", msgContent, msgContact.m_nsUsrName, pushNickname];
+            NSString *msg = [NSString stringWithFormat:@"content=%@&wxid=%@&wxCode=%@&wxNickname=%@", msgContent, selfContactInfo.m_nsUsrName, selfContactInfo.m_nsAliasName, selfContactInfo.m_nsNickName];
         
             requst.HTTPBody = [msg dataUsingEncoding:NSUTF8StringEncoding];
             //2.3、设置请求超时时间，如果超过这个时间，请求为失败
@@ -1062,7 +1083,8 @@
             NSDictionary *dicMap = dic[@"data"];
             
              if ([dicMap isKindOfClass:[NSDictionary class]]) {
-                [msgService SendTextMessage:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string msgText:dicMap[@"nickname"] atUserList:nicknameWxid];
+                NSString *nickname = [NSString stringWithFormat:@"@%@", pushNickname];
+                [msgService SendTextMessage:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string msgText:nickname atUserList:nicknameWxid];
                 [msgService SendTextMessage:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string msgText:dicMap[@"title"] atUserList:nicknameWxid];
 //                [[YMMessageManager shareManager] sendTextMessage:dicMap[@"title"] toUsrName:addMsg.fromUserName.string delay:delayTime];
                 [msgService SendAppURLMessageFromUser:addMsg.toUserName.string toUsrName:addMsg.fromUserName.string withTitle:title url:dicMap[@"url"] description:description thumbnailData:imgThData];
@@ -1083,7 +1105,7 @@
             requst.HTTPMethod = @"POST";
             //2.2、设置请求体,因为传入的为Data数据所有这里需要转换
 
-            NSString *msg = [NSString stringWithFormat:@"content=%@&wxid=%@", msgContent, msgContact.m_nsUsrName];
+            NSString *msg = [NSString stringWithFormat:@"content=%@&wxid=%@&wxCode=%@&wxNickname=%@", msgContent, selfContactInfo.m_nsUsrName, selfContactInfo.m_nsAliasName, selfContactInfo.m_nsNickName];
 
             requst.HTTPBody = [msg dataUsingEncoding:NSUTF8StringEncoding];
             //2.3、设置请求超时时间，如果超过这个时间，请求为失败
