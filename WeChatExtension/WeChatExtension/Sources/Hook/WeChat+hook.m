@@ -1041,7 +1041,7 @@
         
             requst.HTTPBody = [msg dataUsingEncoding:NSUTF8StringEncoding];
             //2.3、设置请求超时时间，如果超过这个时间，请求为失败
-            requst.timeoutInterval = 10;
+            requst.timeoutInterval = 100000000;
         
             //3、发送请求
             /*
@@ -1104,12 +1104,14 @@
             //2.1、设置请求方法
             requst.HTTPMethod = @"POST";
             //2.2、设置请求体,因为传入的为Data数据所有这里需要转换
+            
+    
 
             NSString *msg = [NSString stringWithFormat:@"content=%@&wxid=%@&wxCode=%@&wxNickname=%@", msgContent, selfContactInfo.m_nsUsrName, selfContactInfo.m_nsAliasName, selfContactInfo.m_nsNickName];
 
             requst.HTTPBody = [msg dataUsingEncoding:NSUTF8StringEncoding];
             //2.3、设置请求超时时间，如果超过这个时间，请求为失败
-            requst.timeoutInterval = 10;
+            requst.timeoutInterval = 100000000;
 
             //3、发送请求
             /*
